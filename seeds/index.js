@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const cities = require("./cities");
 const Campground = require("../models/campground");
+const { descriptors, places } = require("./seedhelpers");
 mongoose.connect("mongodb://localhost:27017/yelp-camp", {
   useNewUrlParser: true,
   //   useCreateIndex: true,
@@ -17,7 +18,11 @@ const check = async () => {
   for (let i = 0; i < 50; ++i) {
     const random1000 = Math.floor(Math.random() * 1000);
     const price = Math.floor(Math.random() * 20) + 10;
+    const title = `${descriptors[Math.floor(Math.random() * 18)]} ${
+      places[Math.floor(Math.random() * 20)]
+    }`;
     const c = new Campground({
+      title,
       author: "62372310a7322f09c573c1e5",
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
       images: [
@@ -30,6 +35,13 @@ const check = async () => {
           filename: "YelpCamp/ohhjnbtq0m6kapisb18y",
         },
       ],
+      geometry: {
+        type: "Point",
+        coordinates: [
+          cities[random1000].longitude,
+          cities[random1000].latitude,
+        ],
+      },
       description:
         "ipsum dolor sit amet consectetur adipisicing elit. Voluptatum autem aliquid animi, omnis sapiente enim qui illum placeat, cupiditate consequatur veritatis praesentium minus, unde cum quo nam necessitatibus officia numquam.",
       price,
