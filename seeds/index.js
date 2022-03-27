@@ -20,7 +20,16 @@ const check = async () => {
     const c = new Campground({
       author: "62372310a7322f09c573c1e5",
       location: `${cities[random1000].city}, ${cities[random1000].state}`,
-      image: "https://source.unsplash.com/collection/483251",
+      images: [
+        {
+          url: "https://res.cloudinary.com/hanupandat/image/upload/v1648148884/YelpCamp/x2v9w6pilg1rad3txrcx.jpg",
+          filename: "YelpCamp/x2v9w6pilg1rad3txrcx",
+        },
+        {
+          url: "https://res.cloudinary.com/hanupandat/image/upload/v1648148890/YelpCamp/ohhjnbtq0m6kapisb18y.jpg",
+          filename: "YelpCamp/ohhjnbtq0m6kapisb18y",
+        },
+      ],
       description:
         "ipsum dolor sit amet consectetur adipisicing elit. Voluptatum autem aliquid animi, omnis sapiente enim qui illum placeat, cupiditate consequatur veritatis praesentium minus, unde cum quo nam necessitatibus officia numquam.",
       price,

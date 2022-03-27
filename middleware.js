@@ -12,6 +12,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 };
 module.exports.validatecampground = (req, res, next) => {
   const { error } = campgroundSchema.validate(req.body);
+  console.log(req.body);
   if (error) {
     const msg = error.details.map((el) => el.message).join(",");
     throw new ExpressError(msg, "400");
@@ -21,7 +22,7 @@ module.exports.validatecampground = (req, res, next) => {
 module.exports.isAuthor = async (req, res, next) => {
   const { id } = req.params;
   const campground = await Campground.findById(id);
-  if (!campground.author.equals(req.user._id)) {
+  if (!campground.author.equals(req.user.id)) {
     req.flash("error", "You donot have permission to do that!");
     return res.redirect(`/campgrounds/${id}`);
   }
