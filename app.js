@@ -1,6 +1,7 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
+
 const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
@@ -13,6 +14,7 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
+const MongoDBStore = require("connect-mongo")(session);
 
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
@@ -25,9 +27,9 @@ app.use(express.static(path.join(__dirname, "public")));
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 const userRoutes = require("./routes/users");
-// const { execArgv } = require("process");
 
-mongoose.connect("mongodb://localhost:27017/yelp-camp", {
+const db_url = process.env.DB_URL || "mongodb://localhost:27017/yelp-camp";
+mongoose.connect(db_url, {
   useNewUrlParser: true,
   // useCreateIndex: true,
   useUnifiedTopology: true,
@@ -40,8 +42,17 @@ db.once("open", () => {
   console.log("Database connected");
 });
 
+const secret = process.env.SECRET || "thisshouldbeabettersecret!";
+
+const store = new MongoDBStore({
+  url: db_url,
+  secret,
+  touchAfter: 24 * 60 * 60,
+});
+
 const sessionConfig = {
-  secret: "thisshouldbeabettersecret!",
+  store,
+  secret,
   resave: false,
   saveUninitialized: true,
   // store: true,
