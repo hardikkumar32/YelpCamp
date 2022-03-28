@@ -11,39 +11,48 @@ const Schema = mongoose.Schema;
 //   return this.url.replace("/upload", "/upload/w_200");
 // });
 
-const CampgroundSchema = new Schema({
-  title: String,
-  // images: [ImageSchema],
-  images: [
-    {
-      url: String,
-      filename: String,
+const opts = { toJSON: { virtuals: true } };
+
+const CampgroundSchema = new Schema(
+  {
+    title: String,
+    // images: [ImageSchema],
+    images: [
+      {
+        url: String,
+        filename: String,
+      },
+    ],
+    geometry: {
+      type: {
+        type: String,
+        enum: ["Point"],
+        required: true,
+      },
+      coordinates: {
+        type: [Number],
+        required: true,
+      },
     },
-  ],
-  geometry: {
-    type: {
-      type: String,
-      enum: ["Point"],
-      required: true,
-    },
-    coordinates: {
-      type: [Number],
-      required: true,
-    },
-  },
-  price: Number,
-  description: String,
-  location: String,
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  reviews: [
-    {
+    price: Number,
+    description: String,
+    location: String,
+    author: {
       type: Schema.Types.ObjectId,
-      ref: "Review",
+      ref: "User",
     },
-  ],
+    reviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+  },
+  opts
+);
+
+CampgroundSchema.virtual("properties.popUpMarkUp").get(function () {
+  return `<strong><a href="/campgrounds/${this.id}">${this.title}</a><strong>`;
 });
 
 CampgroundSchema.post("findOneAndDelete", async function (doc) {
